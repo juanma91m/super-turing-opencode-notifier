@@ -1,0 +1,8 @@
+{
+  "name": "super-turing-opencode-notifier",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@opencode-ai/plugin": "1.14.19"
+  }
+}

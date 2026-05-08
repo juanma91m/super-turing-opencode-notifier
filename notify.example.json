@@ -1,0 +1,12 @@
+{
+  "quietHours": {
+    "enabled": false,
+    "start": "22:00",
+    "end": "08:00"
+  },
+  "sounds": {
+    "idle": "Glass",
+    "question": "Submarine",
+    "permission": "Submarine"
+  }
+}
