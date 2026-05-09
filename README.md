@@ -1,5 +1,7 @@
 # OpenCode Notifier Add-on
 
+Portable OpenCode addon for native OS notifications, extending `super-turing-opencode` with idle, question, and permission alerts.
+
 Addon separado para notificaciones nativas del SO en OpenCode.
 
 ## Qué hace
