@@ -7,6 +7,7 @@ REPO_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)"
 TARGET_DIR="${HOME}/.config/opencode"
 DRY_RUN=0
 INSTALL_EXAMPLE_CONFIG=0
+INSTALL_SYSTEM_DEPS=0
 
 PLUGIN_SOURCE="$REPO_DIR/plugins/opencode-notify.ts"
 PLUGIN_DEST_REL="plugins/opencode-notify.ts"
@@ -22,6 +23,7 @@ Options:
   --target-dir <path>           Target OpenCode config dir (default: ~/.config/opencode)
   --dry-run                     Show actions without writing files
   --install-example-config      Copy notify.example.json if notify.json does not exist
+  --install-system-deps         Install missing GNOME/X11 focus helpers with sudo
   -h, --help                    Show this help
 EOF
 }
@@ -132,6 +134,27 @@ maybe_warn_gnome_focus_helpers() {
     return 0
   fi
 
+  if [[ "$INSTALL_SYSTEM_DEPS" -eq 1 ]]; then
+    command -v sudo >/dev/null 2>&1 || {
+      printf 'sudo is required by --install-system-deps\n' >&2
+      exit 1
+    }
+    if command -v apt-get >/dev/null 2>&1; then
+      run sudo apt-get install -y "${missing[@]}"
+    elif command -v dnf >/dev/null 2>&1; then
+      run sudo dnf install -y "${missing[@]}"
+    elif command -v pacman >/dev/null 2>&1; then
+      run sudo pacman -S --needed --noconfirm "${missing[@]}"
+    elif command -v zypper >/dev/null 2>&1; then
+      run sudo zypper --non-interactive install "${missing[@]}"
+    else
+      printf 'No supported system package manager found for: %s\n' "${missing[*]}" >&2
+      exit 1
+    fi
+    log "Dependencias de foco procesadas: ${missing[*]}"
+    return 0
+  fi
+
   hint="$(focus_helpers_install_hint "${missing[@]}")"
   package_list="$(join_by_space "${missing[@]}")"
 
@@ -157,6 +180,10 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --install-example-config)
       INSTALL_EXAMPLE_CONFIG=1
+      shift
+      ;;
+    --install-system-deps)
+      INSTALL_SYSTEM_DEPS=1
       shift
       ;;
     -h|--help)

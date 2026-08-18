@@ -22,6 +22,7 @@ Opciones útiles:
 bash scripts/install.sh --dry-run
 bash scripts/install.sh --target-dir "$HOME/.config/opencode"
 bash scripts/install.sh --install-example-config
+bash scripts/install.sh --install-system-deps
 ```
 
 ## Qué instala
@@ -46,6 +47,10 @@ Ejemplo en Debian/Ubuntu:
 ```bash
 sudo apt install wmctrl xdotool
 ```
+
+El installer nunca ejecuta `sudo` por defecto. `--install-system-deps` es el
+consentimiento explícito para instalar únicamente los helpers faltantes usando
+el package manager detectado.
 
 ## Validación
 
